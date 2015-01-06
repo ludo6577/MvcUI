@@ -1,0 +1,1690 @@
+﻿
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8" />
+    <title></title>
+    <style type="text/css" style="display:none">
+/*
+ * jQuery UI CSS Framework VERSION
+ *
+ * Copyright 2010, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ *
+ * http://docs.jquery.com/UI/Theming
+ */
+
+
+    </style>
+
+
+    <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+
+    <script type="text/javascript" style="display:none">
+<!--
+/*
+ * jQuery UI Effects 1.8.4
+ *
+ * Copyright 2010, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ *
+ * http://docs.jquery.com/UI/Effects/
+ */
+;jQuery.effects || (function($, undefined) {
+
+$.effects = {};
+
+
+
+/******************************************************************************/
+/****************************** COLOR ANIMATIONS ******************************/
+/******************************************************************************/
+
+// override the animation for color styles
+$.each(['backgroundColor', 'borderBottomColor', 'borderLeftColor',
+	'borderRightColor', 'borderTopColor', 'color', 'outlineColor'],
+function(i, attr) {
+	$.fx.step[attr] = function(fx) {
+		if (!fx.colorInit) {
+			fx.start = getColor(fx.elem, attr);
+			fx.end = getRGB(fx.end);
+			fx.colorInit = true;
+		}
+
+		fx.elem.style[attr] = 'rgb(' +
+			Math.max(Math.min(parseInt((fx.pos * (fx.end[0] - fx.start[0])) + fx.start[0], 10), 255), 0) + ',' +
+			Math.max(Math.min(parseInt((fx.pos * (fx.end[1] - fx.start[1])) + fx.start[1], 10), 255), 0) + ',' +
+			Math.max(Math.min(parseInt((fx.pos * (fx.end[2] - fx.start[2])) + fx.start[2], 10), 255), 0) + ')';
+	};
+});
+
+// Color Conversion functions from highlightFade
+// By Blair Mitchelmore
+// http://jquery.offput.ca/highlightFade/
+
+// Parse strings looking for color tuples [255,255,255]
+function getRGB(color) {
+		var result;
+
+		// Check if we're already dealing with an array of colors
+		if ( color && color.constructor == Array && color.length == 3 )
+				return color;
+
+		// Look for rgb(num,num,num)
+		if (result = /rgb\(\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*\)/.exec(color))
+				return [parseInt(result[1],10), parseInt(result[2],10), parseInt(result[3],10)];
+
+		// Look for rgb(num%,num%,num%)
+		if (result = /rgb\(\s*([0-9]+(?:\.[0-9]+)?)\%\s*,\s*([0-9]+(?:\.[0-9]+)?)\%\s*,\s*([0-9]+(?:\.[0-9]+)?)\%\s*\)/.exec(color))
+				return [parseFloat(result[1])*2.55, parseFloat(result[2])*2.55, parseFloat(result[3])*2.55];
+
+		// Look for #a0b1c2
+		if (result = /#([a-fA-F0-9]{2})([a-fA-F0-9]{2})([a-fA-F0-9]{2})/.exec(color))
+				return [parseInt(result[1],16), parseInt(result[2],16), parseInt(result[3],16)];
+
+		// Look for #fff
+		if (result = /#([a-fA-F0-9])([a-fA-F0-9])([a-fA-F0-9])/.exec(color))
+				return [parseInt(result[1]+result[1],16), parseInt(result[2]+result[2],16), parseInt(result[3]+result[3],16)];
+
+		// Look for rgba(0, 0, 0, 0) == transparent in Safari 3
+		if (result = /rgba\(0, 0, 0, 0\)/.exec(color))
+				return colors['transparent'];
+
+		// Otherwise, we're most likely dealing with a named color
+		return colors[$.trim(color).toLowerCase()];
+}
+
+function getColor(elem, attr) {
+		var color;
+
+		do {
+				color = $.curCSS(elem, attr);
+
+				// Keep going until we find an element that has color, or we hit the body
+				if ( color != '' && color != 'transparent' || $.nodeName(elem, "body") )
+						break;
+
+				attr = "backgroundColor";
+		} while ( elem = elem.parentNode );
+
+		return getRGB(color);
+};
+
+// Some named colors to work with
+// From Interface by Stefan Petre
+// http://interface.eyecon.ro/
+
+var colors = {
+	aqua:[0,255,255],
+	azure:[240,255,255],
+	beige:[245,245,220],
+	black:[0,0,0],
+	blue:[0,0,255],
+	brown:[165,42,42],
+	cyan:[0,255,255],
+	darkblue:[0,0,139],
+	darkcyan:[0,139,139],
+	darkgrey:[169,169,169],
+	darkgreen:[0,100,0],
+	darkkhaki:[189,183,107],
+	darkmagenta:[139,0,139],
+	darkolivegreen:[85,107,47],
+	darkorange:[255,140,0],
+	darkorchid:[153,50,204],
+	darkred:[139,0,0],
+	darksalmon:[233,150,122],
+	darkviolet:[148,0,211],
+	fuchsia:[255,0,255],
+	gold:[255,215,0],
+	green:[0,128,0],
+	indigo:[75,0,130],
+	khaki:[240,230,140],
+	lightblue:[173,216,230],
+	lightcyan:[224,255,255],
+	lightgreen:[144,238,144],
+	lightgrey:[211,211,211],
+	lightpink:[255,182,193],
+	lightyellow:[255,255,224],
+	lime:[0,255,0],
+	magenta:[255,0,255],
+	maroon:[128,0,0],
+	navy:[0,0,128],
+	olive:[128,128,0],
+	orange:[255,165,0],
+	pink:[255,192,203],
+	purple:[128,0,128],
+	violet:[128,0,128],
+	red:[255,0,0],
+	silver:[192,192,192],
+	white:[255,255,255],
+	yellow:[255,255,0],
+	transparent: [255,255,255]
+};
+
+
+
+/******************************************************************************/
+/****************************** CLASS ANIMATIONS ******************************/
+/******************************************************************************/
+
+var classAnimationActions = ['add', 'remove', 'toggle'],
+	shorthandStyles = {
+		border: 1,
+		borderBottom: 1,
+		borderColor: 1,
+		borderLeft: 1,
+		borderRight: 1,
+		borderTop: 1,
+		borderWidth: 1,
+		margin: 1,
+		padding: 1
+	};
+
+function getElementStyles() {
+	var style = document.defaultView
+			? document.defaultView.getComputedStyle(this, null)
+			: this.currentStyle,
+		newStyle = {},
+		key,
+		camelCase;
+
+	// webkit enumerates style porperties
+	if (style && style.length && style[0] && style[style[0]]) {
+		var len = style.length;
+		while (len--) {
+			key = style[len];
+			if (typeof style[key] == 'string') {
+				camelCase = key.replace(/\-(\w)/g, function(all, letter){
+					return letter.toUpperCase();
+				});
+				newStyle[camelCase] = style[key];
+			}
+		}
+	} else {
+		for (key in style) {
+			if (typeof style[key] === 'string') {
+				newStyle[key] = style[key];
+			}
+		}
+	}
+
+	return newStyle;
+}
+
+function filterStyles(styles) {
+	var name, value;
+	for (name in styles) {
+		value = styles[name];
+		if (
+			// ignore null and undefined values
+			value == null ||
+			// ignore functions (when does this occur?)
+			$.isFunction(value) ||
+			// shorthand styles that need to be expanded
+			name in shorthandStyles ||
+			// ignore scrollbars (break in IE)
+			(/scrollbar/).test(name) ||
+
+			// only colors or values that can be converted to numbers
+			(!(/color/i).test(name) && isNaN(parseFloat(value)))
+		) {
+			delete styles[name];
+		}
+	}
+
+	return styles;
+}
+
+function styleDifference(oldStyle, newStyle) {
+	var diff = { _: 0 }, // http://dev.jquery.com/ticket/5459
+		name;
+
+	for (name in newStyle) {
+		if (oldStyle[name] != newStyle[name]) {
+			diff[name] = newStyle[name];
+		}
+	}
+
+	return diff;
+}
+
+$.effects.animateClass = function(value, duration, easing, callback) {
+	if ($.isFunction(easing)) {
+		callback = easing;
+		easing = null;
+	}
+
+	return this.each(function() {
+
+		var that = $(this),
+			originalStyleAttr = that.attr('style') || ' ',
+			originalStyle = filterStyles(getElementStyles.call(this)),
+			newStyle,
+			className = that.attr('className');
+
+		$.each(classAnimationActions, function(i, action) {
+			if (value[action]) {
+				that[action + 'Class'](value[action]);
+			}
+		});
+		newStyle = filterStyles(getElementStyles.call(this));
+		that.attr('className', className);
+
+		that.animate(styleDifference(originalStyle, newStyle), duration, easing, function() {
+			$.each(classAnimationActions, function(i, action) {
+				if (value[action]) { that[action + 'Class'](value[action]); }
+			});
+			// work around bug in IE by clearing the cssText before setting it
+			if (typeof that.attr('style') == 'object') {
+				that.attr('style').cssText = '';
+				that.attr('style').cssText = originalStyleAttr;
+			} else {
+				that.attr('style', originalStyleAttr);
+			}
+			if (callback) { callback.apply(this, arguments); }
+		});
+	});
+};
+
+$.fn.extend({
+	_addClass: $.fn.addClass,
+	addClass: function(classNames, speed, easing, callback) {
+		return speed ? $.effects.animateClass.apply(this, [{ add: classNames },speed,easing,callback]) : this._addClass(classNames);
+	},
+
+	_removeClass: $.fn.removeClass,
+	removeClass: function(classNames,speed,easing,callback) {
+		return speed ? $.effects.animateClass.apply(this, [{ remove: classNames },speed,easing,callback]) : this._removeClass(classNames);
+	},
+
+	_toggleClass: $.fn.toggleClass,
+	toggleClass: function(classNames, force, speed, easing, callback) {
+		if ( typeof force == "boolean" || force === undefined ) {
+			if ( !speed ) {
+				// without speed parameter;
+				return this._toggleClass(classNames, force);
+			} else {
+				return $.effects.animateClass.apply(this, [(force?{add:classNames}:{remove:classNames}),speed,easing,callback]);
+			}
+		} else {
+			// without switch parameter;
+			return $.effects.animateClass.apply(this, [{ toggle: classNames },force,speed,easing]);
+		}
+	},
+
+	switchClass: function(remove,add,speed,easing,callback) {
+		return $.effects.animateClass.apply(this, [{ add: add, remove: remove },speed,easing,callback]);
+	}
+});
+
+
+
+/******************************************************************************/
+/*********************************** EFFECTS **********************************/
+/******************************************************************************/
+
+$.extend($.effects, {
+	version: "1.8.4",
+
+	// Saves a set of properties in a data storage
+	save: function(element, set) {
+		for(var i=0; i < set.length; i++) {
+			if(set[i] !== null) element.data("ec.storage."+set[i], element[0].style[set[i]]);
+		}
+	},
+
+	// Restores a set of previously saved properties from a data storage
+	restore: function(element, set) {
+		for(var i=0; i < set.length; i++) {
+			if(set[i] !== null) element.css(set[i], element.data("ec.storage."+set[i]));
+		}
+	},
+
+	setMode: function(el, mode) {
+		if (mode == 'toggle') mode = el.is(':hidden') ? 'show' : 'hide'; // Set for toggle
+		return mode;
+	},
+
+	getBaseline: function(origin, original) { // Translates a [top,left] array into a baseline value
+		// this should be a little more flexible in the future to handle a string & hash
+		var y, x;
+		switch (origin[0]) {
+			case 'top': y = 0; break;
+			case 'middle': y = 0.5; break;
+			case 'bottom': y = 1; break;
+			default: y = origin[0] / original.height;
+		};
+		switch (origin[1]) {
+			case 'left': x = 0; break;
+			case 'center': x = 0.5; break;
+			case 'right': x = 1; break;
+			default: x = origin[1] / original.width;
+		};
+		return {x: x, y: y};
+	},
+
+	// Wraps the element around a wrapper that copies position properties
+	createWrapper: function(element) {
+
+		// if the element is already wrapped, return it
+		if (element.parent().is('.ui-effects-wrapper')) {
+			return element.parent();
+		}
+
+		// wrap the element
+		var props = {
+				width: element.outerWidth(true),
+				height: element.outerHeight(true),
+				'float': element.css('float')
+			},
+			wrapper = $('<div></div>')
+				.addClass('ui-effects-wrapper')
+				.css({
+					fontSize: '100%',
+					background: 'transparent',
+					border: 'none',
+					margin: 0,
+					padding: 0
+				});
+
+		element.wrap(wrapper);
+		wrapper = element.parent(); //Hotfix for jQuery 1.4 since some change in wrap() seems to actually loose the reference to the wrapped element
+
+		// transfer positioning properties to the wrapper
+		if (element.css('position') == 'static') {
+			wrapper.css({ position: 'relative' });
+			element.css({ position: 'relative' });
+		} else {
+			$.extend(props, {
+				position: element.css('position'),
+				zIndex: element.css('z-index')
+			});
+			$.each(['top', 'left', 'bottom', 'right'], function(i, pos) {
+				props[pos] = element.css(pos);
+				if (isNaN(parseInt(props[pos], 10))) {
+					props[pos] = 'auto';
+				}
+			});
+			element.css({position: 'relative', top: 0, left: 0 });
+		}
+
+		return wrapper.css(props).show();
+	},
+
+	removeWrapper: function(element) {
+		if (element.parent().is('.ui-effects-wrapper'))
+			return element.parent().replaceWith(element);
+		return element;
+	},
+
+	setTransition: function(element, list, factor, value) {
+		value = value || {};
+		$.each(list, function(i, x){
+			unit = element.cssUnit(x);
+			if (unit[0] > 0) value[x] = unit[0] * factor + unit[1];
+		});
+		return value;
+	}
+});
+
+
+function _normalizeArguments(effect, options, speed, callback) {
+	// shift params for method overloading
+	if (typeof effect == 'object') {
+		callback = options;
+		speed = null;
+		options = effect;
+		effect = options.effect;
+	}
+	if ($.isFunction(options)) {
+		callback = options;
+		speed = null;
+		options = {};
+	}
+        if (typeof options == 'number' || $.fx.speeds[options]) {
+		callback = speed;
+		speed = options;
+		options = {};
+	}
+	if ($.isFunction(speed)) {
+		callback = speed;
+		speed = null;
+	}
+
+	options = options || {};
+
+	speed = speed || options.duration;
+	speed = $.fx.off ? 0 : typeof speed == 'number'
+		? speed : $.fx.speeds[speed] || $.fx.speeds._default;
+
+	callback = callback || options.complete;
+
+	return [effect, options, speed, callback];
+}
+
+$.fn.extend({
+	effect: function(effect, options, speed, callback) {
+		var args = _normalizeArguments.apply(this, arguments),
+			// TODO: make effects takes actual parameters instead of a hash
+			args2 = {
+				options: args[1],
+				duration: args[2],
+				callback: args[3]
+			},
+			effectMethod = $.effects[effect];
+
+		return effectMethod && !$.fx.off ? effectMethod.call(this, args2) : this;
+	},
+
+	_show: $.fn.show,
+	show: function(speed) {
+		if (!speed || typeof speed == 'number' || $.fx.speeds[speed]) {
+			return this._show.apply(this, arguments);
+		} else {
+			var args = _normalizeArguments.apply(this, arguments);
+			args[1].mode = 'show';
+			return this.effect.apply(this, args);
+		}
+	},
+
+	_hide: $.fn.hide,
+	hide: function(speed) {
+		if (!speed || typeof speed == 'number' || $.fx.speeds[speed]) {
+			return this._hide.apply(this, arguments);
+		} else {
+			var args = _normalizeArguments.apply(this, arguments);
+			args[1].mode = 'hide';
+			return this.effect.apply(this, args);
+		}
+	},
+
+	// jQuery core overloads toggle and create _toggle
+	__toggle: $.fn.toggle,
+	toggle: function(speed) {
+		if (!speed || typeof speed == 'number' || $.fx.speeds[speed] ||
+			typeof speed == 'boolean' || $.isFunction(speed)) {
+			return this.__toggle.apply(this, arguments);
+		} else {
+			var args = _normalizeArguments.apply(this, arguments);
+			args[1].mode = 'toggle';
+			return this.effect.apply(this, args);
+		}
+	},
+
+	// helper functions
+	cssUnit: function(key) {
+		var style = this.css(key), val = [];
+		$.each( ['em','px','%','pt'], function(i, unit){
+			if(style.indexOf(unit) > 0)
+				val = [parseFloat(style), unit];
+		});
+		return val;
+	}
+});
+
+
+
+/******************************************************************************/
+/*********************************** EASING ***********************************/
+/******************************************************************************/
+
+/*
+ * jQuery Easing v1.3 - http://gsgd.co.uk/sandbox/jquery/easing/
+ *
+ * Uses the built in easing capabilities added In jQuery 1.1
+ * to offer multiple easing options
+ *
+ * TERMS OF USE - jQuery Easing
+ *
+ * Open source under the BSD License.
+ *
+ * Copyright 2008 George McGinley Smith
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this list of
+ * conditions and the following disclaimer.
+ * Redistributions in binary form must reproduce the above copyright notice, this list
+ * of conditions and the following disclaimer in the documentation and/or other materials
+ * provided with the distribution.
+ *
+ * Neither the name of the author nor the names of contributors may be used to endorse
+ * or promote products derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+ * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+ * OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+*/
+
+// t: current time, b: begInnIng value, c: change In value, d: duration
+$.easing.jswing = $.easing.swing;
+
+$.extend($.easing,
+{
+	def: 'easeOutQuad',
+	swing: function (x, t, b, c, d) {
+		//alert($.easing.default);
+		return $.easing[$.easing.def](x, t, b, c, d);
+	},
+	easeInQuad: function (x, t, b, c, d) {
+		return c*(t/=d)*t + b;
+	},
+	easeOutQuad: function (x, t, b, c, d) {
+		return -c *(t/=d)*(t-2) + b;
+	},
+	easeInOutQuad: function (x, t, b, c, d) {
+		if ((t/=d/2) < 1) return c/2*t*t + b;
+		return -c/2 * ((--t)*(t-2) - 1) + b;
+	},
+	easeInCubic: function (x, t, b, c, d) {
+		return c*(t/=d)*t*t + b;
+	},
+	easeOutCubic: function (x, t, b, c, d) {
+		return c*((t=t/d-1)*t*t + 1) + b;
+	},
+	easeInOutCubic: function (x, t, b, c, d) {
+		if ((t/=d/2) < 1) return c/2*t*t*t + b;
+		return c/2*((t-=2)*t*t + 2) + b;
+	},
+	easeInQuart: function (x, t, b, c, d) {
+		return c*(t/=d)*t*t*t + b;
+	},
+	easeOutQuart: function (x, t, b, c, d) {
+		return -c * ((t=t/d-1)*t*t*t - 1) + b;
+	},
+	easeInOutQuart: function (x, t, b, c, d) {
+		if ((t/=d/2) < 1) return c/2*t*t*t*t + b;
+		return -c/2 * ((t-=2)*t*t*t - 2) + b;
+	},
+	easeInQuint: function (x, t, b, c, d) {
+		return c*(t/=d)*t*t*t*t + b;
+	},
+	easeOutQuint: function (x, t, b, c, d) {
+		return c*((t=t/d-1)*t*t*t*t + 1) + b;
+	},
+	easeInOutQuint: function (x, t, b, c, d) {
+		if ((t/=d/2) < 1) return c/2*t*t*t*t*t + b;
+		return c/2*((t-=2)*t*t*t*t + 2) + b;
+	},
+	easeInSine: function (x, t, b, c, d) {
+		return -c * Math.cos(t/d * (Math.PI/2)) + c + b;
+	},
+	easeOutSine: function (x, t, b, c, d) {
+		return c * Math.sin(t/d * (Math.PI/2)) + b;
+	},
+	easeInOutSine: function (x, t, b, c, d) {
+		return -c/2 * (Math.cos(Math.PI*t/d) - 1) + b;
+	},
+	easeInExpo: function (x, t, b, c, d) {
+		return (t==0) ? b : c * Math.pow(2, 10 * (t/d - 1)) + b;
+	},
+	easeOutExpo: function (x, t, b, c, d) {
+		return (t==d) ? b+c : c * (-Math.pow(2, -10 * t/d) + 1) + b;
+	},
+	easeInOutExpo: function (x, t, b, c, d) {
+		if (t==0) return b;
+		if (t==d) return b+c;
+		if ((t/=d/2) < 1) return c/2 * Math.pow(2, 10 * (t - 1)) + b;
+		return c/2 * (-Math.pow(2, -10 * --t) + 2) + b;
+	},
+	easeInCirc: function (x, t, b, c, d) {
+		return -c * (Math.sqrt(1 - (t/=d)*t) - 1) + b;
+	},
+	easeOutCirc: function (x, t, b, c, d) {
+		return c * Math.sqrt(1 - (t=t/d-1)*t) + b;
+	},
+	easeInOutCirc: function (x, t, b, c, d) {
+		if ((t/=d/2) < 1) return -c/2 * (Math.sqrt(1 - t*t) - 1) + b;
+		return c/2 * (Math.sqrt(1 - (t-=2)*t) + 1) + b;
+	},
+	easeInElastic: function (x, t, b, c, d) {
+		var s=1.70158;var p=0;var a=c;
+		if (t==0) return b;  if ((t/=d)==1) return b+c;  if (!p) p=d*.3;
+		if (a < Math.abs(c)) { a=c; var s=p/4; }
+		else var s = p/(2*Math.PI) * Math.asin (c/a);
+		return -(a*Math.pow(2,10*(t-=1)) * Math.sin( (t*d-s)*(2*Math.PI)/p )) + b;
+	},
+	easeOutElastic: function (x, t, b, c, d) {
+		var s=1.70158;var p=0;var a=c;
+		if (t==0) return b;  if ((t/=d)==1) return b+c;  if (!p) p=d*.3;
+		if (a < Math.abs(c)) { a=c; var s=p/4; }
+		else var s = p/(2*Math.PI) * Math.asin (c/a);
+		return a*Math.pow(2,-10*t) * Math.sin( (t*d-s)*(2*Math.PI)/p ) + c + b;
+	},
+	easeInOutElastic: function (x, t, b, c, d) {
+		var s=1.70158;var p=0;var a=c;
+		if (t==0) return b;  if ((t/=d/2)==2) return b+c;  if (!p) p=d*(.3*1.5);
+		if (a < Math.abs(c)) { a=c; var s=p/4; }
+		else var s = p/(2*Math.PI) * Math.asin (c/a);
+		if (t < 1) return -.5*(a*Math.pow(2,10*(t-=1)) * Math.sin( (t*d-s)*(2*Math.PI)/p )) + b;
+		return a*Math.pow(2,-10*(t-=1)) * Math.sin( (t*d-s)*(2*Math.PI)/p )*.5 + c + b;
+	},
+	easeInBack: function (x, t, b, c, d, s) {
+		if (s == undefined) s = 1.70158;
+		return c*(t/=d)*t*((s+1)*t - s) + b;
+	},
+	easeOutBack: function (x, t, b, c, d, s) {
+		if (s == undefined) s = 1.70158;
+		return c*((t=t/d-1)*t*((s+1)*t + s) + 1) + b;
+	},
+	easeInOutBack: function (x, t, b, c, d, s) {
+		if (s == undefined) s = 1.70158;
+		if ((t/=d/2) < 1) return c/2*(t*t*(((s*=(1.525))+1)*t - s)) + b;
+		return c/2*((t-=2)*t*(((s*=(1.525))+1)*t + s) + 2) + b;
+	},
+	easeInBounce: function (x, t, b, c, d) {
+		return c - $.easing.easeOutBounce (x, d-t, 0, c, d) + b;
+	},
+	easeOutBounce: function (x, t, b, c, d) {
+		if ((t/=d) < (1/2.75)) {
+			return c*(7.5625*t*t) + b;
+		} else if (t < (2/2.75)) {
+			return c*(7.5625*(t-=(1.5/2.75))*t + .75) + b;
+		} else if (t < (2.5/2.75)) {
+			return c*(7.5625*(t-=(2.25/2.75))*t + .9375) + b;
+		} else {
+			return c*(7.5625*(t-=(2.625/2.75))*t + .984375) + b;
+		}
+	},
+	easeInOutBounce: function (x, t, b, c, d) {
+		if (t < d/2) return $.easing.easeInBounce (x, t*2, 0, c, d) * .5 + b;
+		return $.easing.easeOutBounce (x, t*2-d, 0, c, d) * .5 + c*.5 + b;
+	}
+});
+
+/*
+ *
+ * TERMS OF USE - EASING EQUATIONS
+ *
+ * Open source under the BSD License.
+ *
+ * Copyright 2001 Robert Penner
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this list of
+ * conditions and the following disclaimer.
+ * Redistributions in binary form must reproduce the above copyright notice, this list
+ * of conditions and the following disclaimer in the documentation and/or other materials
+ * provided with the distribution.
+ *
+ * Neither the name of the author nor the names of contributors may be used to endorse
+ * or promote products derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+ * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+ * OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+
+})(jQuery);
+
+//-->
+    </script>
+
+    <script type="text/javascript" style="display:none">
+<!--
+/*
+ * jQuery UI Effects Blind 1.8.4
+ *
+ * Copyright 2010, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ *
+ * http://docs.jquery.com/UI/Effects/Blind
+ *
+ * Depends:
+ *	jquery.effects.core.js
+ */
+(function( $, undefined ) {
+
+$.effects.blind = function(o) {
+
+	return this.queue(function() {
+
+		// Create element
+		var el = $(this), props = ['position','top','left'];
+
+		// Set options
+		var mode = $.effects.setMode(el, o.options.mode || 'hide'); // Set Mode
+		var direction = o.options.direction || 'vertical'; // Default direction
+
+		// Adjust
+		$.effects.save(el, props); el.show(); // Save & Show
+		var wrapper = $.effects.createWrapper(el).css({overflow:'hidden'}); // Create Wrapper
+		var ref = (direction == 'vertical') ? 'height' : 'width';
+		var distance = (direction == 'vertical') ? wrapper.height() : wrapper.width();
+		if(mode == 'show') wrapper.css(ref, 0); // Shift
+
+		// Animation
+		var animation = {};
+		animation[ref] = mode == 'show' ? distance : 0;
+
+		// Animate
+		wrapper.animate(animation, o.duration, o.options.easing, function() {
+			if(mode == 'hide') el.hide(); // Hide
+			$.effects.restore(el, props); $.effects.removeWrapper(el); // Restore
+			if(o.callback) o.callback.apply(el[0], arguments); // Callback
+			el.dequeue();
+		});
+
+	});
+
+};
+
+})(jQuery);
+
+//-->
+    </script>
+
+    <style type="text/css" style="display:none">
+                body {
+                    font-size: 62.5%;
+                }
+
+                table {
+                    font-size: 1em;
+                }
+
+                /* Site
+           -------------------------------- */
+
+                body {
+                    font-family: "Trebuchet MS", "Helvetica", "Arial", "Verdana", "sans-serif";
+                }
+
+                /* Layout
+           -------------------------------- */
+
+                .layout-grid {
+                    width: 960px;
+                }
+
+                    .layout-grid td {
+                        vertical-align: top;
+                    }
+
+                        .layout-grid td.left-nav {
+                            width: 140px;
+                        }
+
+                        .layout-grid td.normal {
+                            border-left: 1px solid #eee;
+                            padding: 20px 24px;
+                            font-family: "Trebuchet MS", "Helvetica", "Arial", "Verdana", "sans-serif";
+                        }
+
+                        .layout-grid td.demos {
+                            background: url('http://www.dotnetspeaks.com/images/demos_bg.jpg') no-repeat;
+                            height: 337px;
+                            overflow: hidden;
+                        }
+
+                /* Normal
+           -------------------------------- */
+
+                .normal h3,
+                .normal h4 {
+                    margin: 0;
+                    font-weight: normal;
+                }
+
+                .normal h3 {
+                    padding: 0 0 9px;
+                    font-size: 1.8em;
+                }
+
+                .normal h4 {
+                    padding-bottom: 21px;
+                    border-bottom: 1px dashed #999;
+                    font-size: 1.2em;
+                    font-weight: bold;
+                }
+
+                .normal p {
+                    font-size: 1.2em;
+                }
+
+                /* Demos */
+
+                .demos-nav, .demos-nav dt, .demos-nav dd, .demos-nav ul, .demos-nav li {
+                    margin: 0;
+                    padding: 0;
+                }
+
+                .demos-nav {
+                    float: left;
+                    width: 170px;
+                    font-size: 1.3em;
+                }
+
+                    .demos-nav dt,
+                    .demos-nav h4 {
+                        margin: 0;
+                        padding: 0;
+                        font: normal 1.1em "Trebuchet MS", "Helvetica", "Arial", "Verdana", "sans-serif";
+                        color: #e87b10;
+                    }
+
+                    .demos-nav dt,
+                    .demos-nav h4 {
+                        margin-top: 1.5em;
+                        margin-bottom: 0;
+                        padding-left: 8px;
+                        padding-bottom: 5px;
+                        line-height: 1.2em;
+                        border-bottom: 1px solid #F4F4F4;
+                    }
+
+                    .demos-nav dd a,
+                    .demos-nav li a {
+                        border-bottom: 1px solid #F4F4F4;
+                        display: block;
+                        padding: 4px 3px 4px 8px;
+                        font-size: 90%;
+                        text-decoration: none;
+                        color: #555;
+                        margin: 2px 0;
+                        height: 13px;
+                    }
+
+                        .demos-nav dd a:hover,
+                        .demos-nav dd a:focus,
+                        .demos-nav dd a:hover,
+                        .demos-nav dd a:focus {
+                            background: #f3f3f3;
+                            color: #000;
+                            -moz-border-radius: 5px;
+                            -webkit-border-radius: 5px;
+                        }
+
+                        .demos-nav dd a.selected {
+                            background: #555;
+                            color: #ffffff;
+                            -moz-border-radius: 5px;
+                            -webkit-border-radius: 5px;
+                        }
+
+
+                /* new styles for demo pages, added by Filament 12.29.08
+        eventually we should convert the font sizes to ems -- using px for now to minimize style conflicts
+        */
+
+                .normal h3.demo-header {
+                    font-size: 32px;
+                    padding: 0 0 5px;
+                    border-bottom: 1px solid #eee;
+                    text-transform: capitalize;
+                }
+
+                .normal h4.demo-subheader {
+                    font-size: 10px;
+                    text-transform: uppercase;
+                    color: #999;
+                    padding: 8px 0 3px;
+                    border: 0;
+                    margin: 0;
+                }
+
+                .normal a:link,
+                .normal a:visited {
+                    color: #1b75bb;
+                    text-decoration: none;
+                }
+
+                .normal a:hover,
+                .normal a:active {
+                    color: #0b559b;
+                }
+
+                #demo-config {
+                    padding: 20px 0 0;
+                }
+
+                #demo-frame {
+                    float: left;
+                    width: 540px;
+                    height: 380px;
+                    border: 1px solid #ddd;
+                    overflow: auto;
+                    position: relative;
+                }
+
+                    #demo-frame h3, #demo-frame h4 {
+                        padding: 0;
+                        font-weight: bold;
+                        font-size: 1em;
+                    }
+
+                #demo-config-menu {
+                    float: right;
+                    width: 180px;
+                }
+
+                    #demo-config-menu h4 {
+                        font-size: 13px;
+                        color: #666;
+                        font-weight: normal;
+                        border: 0;
+                        padding-left: 18px;
+                    }
+
+                    #demo-config-menu ul {
+                        list-style: none;
+                        padding: 0;
+                        margin: 0;
+                    }
+
+                    #demo-config-menu li {
+                        font-size: 12px;
+                        padding: 0 0 0 10px;
+                        margin: 3px 0;
+                        zoom: 1;
+                    }
+
+                        #demo-config-menu li a:link,
+                        #demo-config-menu li a:visited {
+                            display: block;
+                            padding: 1px 8px 4px;
+                            border-bottom: 1px dotted #b3b3b3;
+                        }
+
+                        * html #demo-config-menu li a:link,
+                        * html #demo-config-menu li a:visited {
+                            padding: 1px 8px 2px;
+                        }
+
+                        #demo-config-menu li a:hover,
+                        #demo-config-menu li a:active {
+                            background-color: #f6f6f6;
+                        }
+
+                        #demo-config-menu li.demo-config-on {
+                            background: url(http://www.dotnetspeaks.com/LiveDemos/jQuery/images/demo-config-on-tile.gif) repeat-x left center;
+                        }
+
+                            #demo-config-menu li.demo-config-on a:link,
+                            #demo-config-menu li.demo-config-on a:visited,
+                            #demo-config-menu li.demo-config-on a:hover,
+                            #demo-config-menu li.demo-config-on a:active {
+                                background: url(http://www.dotnetspeaks.com/LiveDemos/jQuery/images/demo-config-on.gif) no-repeat left;
+                                padding-left: 18px;
+                                color: #fff;
+                                border: 0;
+                                margin-left: -10px;
+                                margin-top: 0px;
+                                margin-bottom: 0px;
+                            }
+
+                #demo-source, #demo-notes {
+                    clear: both;
+                    padding: 20px 0 0;
+                    font-size: 1.3em;
+                }
+
+                #demo-notes {
+                    width: 520px;
+                    color: #333;
+                    font-size: 1em;
+                }
+
+                    #demo-notes p code, .demo-description p code {
+                        padding: 0;
+                        font-weight: bold;
+                    }
+
+                #demo-source pre, #demo-source code {
+                    padding: 0;
+                }
+
+                code, pre {
+                    padding: 8px 0 8px 20px;
+                    font-size: 1.2em;
+                    line-height: 130%;
+                }
+
+                #demo-source a:link,
+                #demo-source a:visited,
+                #demo-source a:hover,
+                #demo-source a:active {
+                    font-size: 12px;
+                    padding-left: 13px;
+                    background-position: left center;
+                    background-repeat: no-repeat;
+                }
+
+                #demo-source a.source-open:link,
+                #demo-source a.source-open:visited,
+                #demo-source a.source-open:hover,
+                #demo-source a.source-open:active {
+                    background-image: url(http://www.dotnetspeaks.com/LiveDemos/jQuery/images/demo-spindown-open.gif);
+                }
+
+                #demo-source a.source-closed:link,
+                #demo-source a.source-closed:visited,
+                #demo-source a.source-closed:hover,
+                #demo-source a.source-closed:active {
+                    background-image: url(http://www.dotnetspeaks.com/LiveDemos/jQuery/images/demo-spindown-closed.gif);
+                }
+
+                div.demo {
+                    padding: 12px;
+                    font-family: "Trebuchet MS", "Arial", "Helvetica", "Verdana", "sans-serif";
+                }
+
+                    div.demo h3.docs {
+                        clear: left;
+                        font-size: 12px;
+                        font-weight: normal;
+                        padding: 0 0 1em;
+                        margin: 0;
+                    }
+
+                div.demo-description {
+                    clear: both;
+                    padding: 12px;
+                    font-family: "Trebuchet MS", "Arial", "Helvetica", "Verdana", "sans-serif";
+                    font-size: 1.3em;
+                    line-height: 1.4em;
+                }
+
+                .ui-draggable, .ui-droppable {
+                    background-position: top left;
+                }
+
+                .left-nav .demos-nav {
+                    padding-right: 10px;
+                }
+
+                #demo-link {
+                    font-size: 11px;
+                    padding-top: 6px;
+                    clear: both;
+                    overflow: hidden;
+                }
+
+                    #demo-link a span.ui-icon {
+                        float: left;
+                        margin-right: 3px;
+                    }
+
+                /* Component containers
+        ----------------------------------*/
+                #widget-docs .ui-widget {
+                    font-family: Trebuchet MS,Verdana,Arial,sans-serif;
+                    font-size: 1em;
+                }
+
+                    #widget-docs .ui-widget input, #widget-docs .ui-widget select, #widget-docs .ui-widget textarea, #widget-docs .ui-widget button {
+                        font-family: Trebuchet MS,Verdana,Arial,sans-serif;
+                        font-size: 1em;
+                    }
+
+                #widget-docs .ui-widget-header {
+                    border: 1px solid #ffffff;
+                    background: #464646 url(http://www.dotnetspeaks.com/LiveDemos/jQuery/images/464646_40x100_textures_01_flat_100.png) 50% 50% repeat-x;
+                    color: #ffffff;
+                    font-weight: bold;
+                }
+
+                    #widget-docs .ui-widget-header a {
+                        color: #ffffff;
+                    }
+
+                #widget-docs .ui-widget-content {
+                    border: 1px solid #ffffff;
+                    background: #ffffff url(http://www.dotnetspeaks.com/LiveDemos/jQuery/images/ffffff_40x100_textures_01_flat_75.png) 50% 50% repeat-x;
+                    color: #222222;
+                }
+
+                    #widget-docs .ui-widget-content a {
+                        color: #222222;
+                    }
+
+                    /* Interaction states
+        ----------------------------------*/
+                    #widget-docs .ui-state-default, #widget-docs .ui-widget-content #widget-docs .ui-state-default {
+                        border: 1px solid #666666;
+                        background: #555555 url(http://www.dotnetspeaks.com/LiveDemos/jQuery/images/555555_40x100_textures_03_highlight_soft_75.png) 50% 50% repeat-x;
+                        font-weight: normal;
+                        color: #ffffff;
+                        outline: none;
+                    }
+
+                        #widget-docs .ui-state-default a {
+                            color: #ffffff;
+                            text-decoration: none;
+                            outline: none;
+                        }
+
+                    #widget-docs .ui-state-hover, #widget-docs .ui-widget-content #widget-docs .ui-state-hover, #widget-docs .ui-state-focus, #widget-docs .ui-widget-content #widget-docs .ui-state-focus {
+                        border: 1px solid #666666;
+                        background: #444444 url(http://www.dotnetspeaks.com/LiveDemos/jQuery/images/444444_40x100_textures_03_highlight_soft_60.png) 50% 50% repeat-x;
+                        font-weight: normal;
+                        color: #ffffff;
+                        outline: none;
+                    }
+
+                        #widget-docs .ui-state-hover a {
+                            color: #ffffff;
+                            text-decoration: none;
+                            outline: none;
+                        }
+
+                    #widget-docs .ui-state-active, #widget-docs .ui-widget-content #widget-docs .ui-state-active {
+                        border: 1px solid #666666;
+                        background: #ffffff url(http://www.dotnetspeaks.com/LiveDemos/jQuery/images/ffffff_40x100_textures_01_flat_65.png) 50% 50% repeat-x;
+                        font-weight: normal;
+                        color: #F6921E;
+                        outline: none;
+                    }
+
+                        #widget-docs .ui-state-active a {
+                            color: #F6921E;
+                            outline: none;
+                            text-decoration: none;
+                        }
+
+                    /* Interaction Cues
+        ----------------------------------*/
+                    #widget-docs .ui-state-highlight, #widget-docs .ui-widget-content #widget-docs .ui-state-highlight {
+                        border: 1px solid #fcefa1;
+                        background: #fbf9ee url(http://www.dotnetspeaks.com/LiveDemos/jQuery/images/fbf9ee_40x100_textures_02_glass_55.png) 50% 50% repeat-x;
+                        color: #363636;
+                    }
+
+                    #widget-docs .ui-state-error, #widget-docs .ui-widget-content #widget-docs .ui-state-error {
+                        border: 1px solid #cd0a0a;
+                        background: #fef1ec url(http://www.dotnetspeaks.com/LiveDemos/jQuery/images/fef1ec_40x100_textures_05_inset_soft_95.png) 50% bottom repeat-x;
+                        color: #cd0a0a;
+                    }
+
+                    #widget-docs .ui-state-error-text, #widget-docs .ui-widget-content #widget-docs .ui-state-error-text {
+                        color: #cd0a0a;
+                    }
+
+                    #widget-docs .ui-state-disabled, #widget-docs .ui-widget-content #widget-docs .ui-state-disabled {
+                        opacity: .35;
+                        filter: Alpha(Opacity=35);
+                        background-image: none;
+                    }
+
+                    #widget-docs .ui-priority-primary, #widget-docs .ui-widget-content #widget-docs .ui-priority-primary {
+                        font-weight: bold;
+                    }
+
+                    #widget-docs .ui-priority-secondary, #widget-docs .ui-widget-content #widget-docs .ui-priority-secondary {
+                        opacity: .7;
+                        filter: Alpha(Opacity=70);
+                        font-weight: normal;
+                    }
+
+                /* Icons
+        ----------------------------------*/
+
+                /* states and images */
+                #demo-frame-wrapper .ui-icon, #widget-docs .ui-icon {
+                    width: 16px;
+                    height: 16px;
+                    background-image: url(http://www.dotnetspeaks.com/LiveDemos/jQuery/images/222222_256x240_icons_icons.png);
+                }
+
+                #widget-docs .ui-widget-content .ui-icon {
+                    background-image: url(http://www.dotnetspeaks.com/LiveDemos/jQuery/images/222222_256x240_icons_icons.png);
+                }
+
+                #widget-docs .ui-widget-header .ui-icon {
+                    background-image: url(http://www.dotnetspeaks.com/LiveDemos/jQuery/images/222222_256x240_icons_icons.png);
+                }
+
+                #widget-docs .ui-state-default .ui-icon {
+                    background-image: url(http://www.dotnetspeaks.com/LiveDemos/jQuery/images/888888_256x240_icons_icons.png);
+                }
+
+                #widget-docs .ui-state-hover .ui-icon, #widget-docs .ui-state-focus .ui-icon {
+                    background-image: url(http://www.dotnetspeaks.com/LiveDemos/jQuery/images/454545_256x240_icons_icons.png);
+                }
+
+                #widget-docs .ui-state-active .ui-icon {
+                    background-image: url(http://www.dotnetspeaks.com/LiveDemos/jQuery/images/454545_256x240_icons_icons.png);
+                }
+
+                #widget-docs .ui-state-highlight .ui-icon {
+                    background-image: url(http://www.dotnetspeaks.com/LiveDemos/jQuery/images/2e83ff_256x240_icons_icons.png);
+                }
+
+                #widget-docs .ui-state-error .ui-icon, #widget-docs .ui-state-error-text .ui-icon {
+                    background-image: url(http://www.dotnetspeaks.com/LiveDemos/jQuery/images/cd0a0a_256x240_icons_icons.png);
+                }
+
+
+                /* Misc visuals
+        ----------------------------------*/
+
+                /* Corner radius */
+                #widget-docs .ui-corner-tl {
+                    -moz-border-radius-topleft: 4px;
+                    -webkit-border-top-left-radius: 4px;
+                }
+
+                #widget-docs .ui-corner-tr {
+                    -moz-border-radius-topright: 4px;
+                    -webkit-border-top-right-radius: 4px;
+                }
+
+                #widget-docs .ui-corner-bl {
+                    -moz-border-radius-bottomleft: 4px;
+                    -webkit-border-bottom-left-radius: 4px;
+                }
+
+                #widget-docs .ui-corner-br {
+                    -moz-border-radius-bottomright: 4px;
+                    -webkit-border-bottom-right-radius: 4px;
+                }
+
+                #widget-docs .ui-corner-top {
+                    -moz-border-radius-topleft: 4px;
+                    -webkit-border-top-left-radius: 4px;
+                    -moz-border-radius-topright: 4px;
+                    -webkit-border-top-right-radius: 4px;
+                }
+
+                #widget-docs .ui-corner-bottom {
+                    -moz-border-radius-bottomleft: 4px;
+                    -webkit-border-bottom-left-radius: 4px;
+                    -moz-border-radius-bottomright: 4px;
+                    -webkit-border-bottom-right-radius: 4px;
+                }
+
+                #widget-docs .ui-corner-right {
+                    -moz-border-radius-topright: 4px;
+                    -webkit-border-top-right-radius: 4px;
+                    -moz-border-radius-bottomright: 4px;
+                    -webkit-border-bottom-right-radius: 4px;
+                }
+
+                #widget-docs .ui-corner-left {
+                    -moz-border-radius-topleft: 4px;
+                    -webkit-border-top-left-radius: 4px;
+                    -moz-border-radius-bottomleft: 4px;
+                    -webkit-border-bottom-left-radius: 4px;
+                }
+
+                #widget-docs .ui-corner-all {
+                    -moz-border-radius: 4px;
+                    -webkit-border-radius: 4px;
+                }
+
+                /* Overlays */
+                #widget-docs .ui-widget-overlay {
+                    background: #aaaaaa url(http://www.dotnetspeaks.com/LiveDemos/jQuery/images/aaaaaa_40x100_textures_01_flat_0.png) 50% 50% repeat-x;
+                    opacity: .30;
+                    filter: Alpha(Opacity=30);
+                }
+
+                #widget-docs .ui-widget-shadow {
+                    margin: -8px 0 0 -8px;
+                    padding: 8px;
+                    background: #aaaaaa url(http://www.dotnetspeaks.com/LiveDemos/jQuery/images/aaaaaa_40x100_textures_01_flat_0.png) 50% 50% repeat-x;
+                    opacity: .30;
+                    filter: Alpha(Opacity=30);
+                    -moz-border-radius: 8px;
+                    -webkit-border-radius: 8px;
+                }
+
+                /*
+        ----------------------------------*/
+
+                #widget-docs {
+                    margin: 20px 0 0;
+                    border: none;
+                }
+
+                    #widget-docs h2, #widget-docs h3, #widget-docs h4, #widget-docs p, #widget-docs ul, #widget-docs code {
+                        margin: 0;
+                        padding: 0;
+                    }
+
+                    #widget-docs code {
+                        display: block;
+                        color: #444;
+                        font-size: .9em;
+                        margin: 0 0 1em;
+                    }
+
+                        #widget-docs code strong {
+                            color: #000;
+                        }
+
+                    #widget-docs p {
+                        margin: 0 3em 1.2em 0;
+                    }
+
+                        #widget-docs p.intro {
+                            font-size: 13px;
+                            color: #666;
+                            line-height: 1.3;
+                        }
+
+                    #widget-docs ul {
+                        list-style-type: none;
+                    }
+
+                    #widget-docs h2 {
+                        font-size: 16px;
+                        margin: 1.2em 0 .5em;
+                    }
+
+                    #widget-docs h3 {
+                        font-size: 14px;
+                        color: #e6820E;
+                        margin: 1.5em 0 .5em;
+                    }
+
+                .normal #widget-docs h4 {
+                    font-size: 12px;
+                    color: #000;
+                    border: 0;
+                    margin: 0 0 .5em;
+                }
+
+                #docs-overview-main {
+                    width: 400px;
+                }
+
+                #docs-overview-sidebar {
+                    float: right;
+                    width: 200px;
+                }
+
+                    #docs-overview-sidebar a span {
+                        color: #666;
+                    }
+
+                #widget-docs #docs-overview-main p {
+                    margin-right: 0;
+                }
+
+                #widget-docs #docs-overview-sidebar h4 {
+                    padding-left: 0;
+                }
+
+                .docs-list-header {
+                    float: left;
+                    width: 100%;
+                    margin: 10px 0 0;
+                    border-bottom: 1px solid #eee;
+                }
+
+                #widget-docs .docs-list-header h2 {
+                    float: left;
+                    margin: 0;
+                }
+
+                #widget-docs .docs-list-header p {
+                    float: right;
+                    margin: 5px 0;
+                    font-size: 11px;
+                }
+
+                .docs-list {
+                    float: left;
+                    width: 100%;
+                    padding: 0 0 10px;
+                }
+
+                    .docs-list .param-header {
+                        float: left;
+                        clear: left;
+                        width: 100%;
+                        padding: 8px 0;
+                        border-top: 1px solid #eee;
+                    }
+
+                #widget-docs .param-header h3, #widget-docs .param-header p {
+                    margin: 0;
+                    float: left;
+                }
+
+                #widget-docs .param-header h3 {
+                    width: 50%;
+                }
+
+                    #widget-docs .param-header h3 span {
+                        background: url(http://www.dotnetspeaks.com/LiveDemos/jQuery/images/demo-spindown-closed.gif) no-repeat left;
+                        padding-left: 13px;
+                    }
+
+                #widget-docs .param-open .param-header h3 span {
+                    background: url(http://www.dotnetspeaks.com/LiveDemos/jQuery/images/demo-spindown-open.gif) no-repeat left;
+                }
+
+                #widget-docs .param-header p {
+                    width: 24%;
+                }
+
+                    #widget-docs .param-header p.param-type span {
+                        background: url(http://www.dotnetspeaks.com/LiveDemos/jQuery/images/icon-docs-info.gif) no-repeat left;
+                        cursor: pointer;
+                        border-bottom: 1px dashed #ccc;
+                        padding-left: 15px;
+                    }
+
+                .param-details {
+                    padding-left: 13px;
+                }
+
+                .param-args {
+                    margin: 0 0 1.5em;
+                    border-top: 1px dotted #ccc;
+                }
+
+                    .param-args td {
+                        padding: 3px 30px 3px 5px;
+                        border-bottom: 1px dotted #ccc;
+                    }
+
+
+                /* overrides for ui-tab styles */
+                #widget-docs ul.ui-tabs-nav {
+                    padding: 0 0 0 8px;
+                }
+
+                #widget-docs .ui-tabs-nav li {
+                    margin: 5px 5px 0 0;
+                }
+
+                    #widget-docs .ui-tabs-nav li a:link,
+                    #widget-docs .ui-tabs-nav li a:visited,
+                    #widget-docs .ui-tabs-nav li a:hover,
+                    #widget-docs .ui-tabs-nav li a:active {
+                        font-size: 14px;
+                        padding: 4px 1.2em 3px;
+                        color: #fff;
+                    }
+
+                    #widget-docs .ui-tabs-nav li.ui-tabs-selected a:link,
+                    #widget-docs .ui-tabs-nav li.ui-tabs-selected a:visited,
+                    #widget-docs .ui-tabs-nav li.ui-tabs-selected a:hover,
+                    #widget-docs .ui-tabs-nav li.ui-tabs-selected a:active {
+                        color: #e6820E;
+                    }
+
+                #widget-docs .ui-tabs-panel {
+                    padding: 20px 9px;
+                    font-size: 12px;
+                    line-height: 1.4;
+                    color: #000;
+                }
+
+                #widget-docs .ui-widget-content a:link,
+                #widget-docs .ui-widget-content a:visited {
+                    color: #1b75bb;
+                    text-decoration: none;
+                }
+
+                #widget-docs .ui-widget-content a:hover,
+                #widget-docs .ui-widget-content a:active {
+                    color: #0b559b;
+                }
+    </style>
+
+    <style type="text/css">
+        #effect {
+            width: 180px;
+            height: 135px;
+            padding: 0.4em;
+            position: relative;
+            overflow: auto;
+        }
+
+        .textbox {
+            width: 185px;
+            height: 14px;
+        }
+
+        body {
+            font-size: 62.5%;
+        }
+    </style>
+
+    <script type="text/javascript">
+        $(function () {
+            $("#effect").hide();
+            //run the currently selected effect
+            function runEffect() {
+                //get effect type from
+                if (!($('#effect').is(":visible"))) {
+                    //run the effect
+                    $("#effect").show('blind', 200);
+                }
+                else {
+                    $("#effect").hide('blind', 200);
+                }
+            };
+
+            //set effect from select menu value
+            $("#ddlArrow").click(function () {
+                runEffect();
+                return false;
+            });
+
+
+            $(document).click(function (e) { if (($('#effect').is(":visible"))) { $("#effect").hide('blind', 1000); } });
+
+            $('#effect').click(function (e) {
+                e.stopPropagation();
+            });
+        });
+    </script>
+
+</head>
+<body>
+    <form method="post" action="jQueryDropDownListWithCheckboxes.aspx" id="form1">
+        <div class="aspNetHidden">
+            <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKMTg0NDU1MzgzNw9kFgJmD2QWAgIDDxBkDxYKZgIBAgICAwIEAgUCBgIHAggCCRYKEAURMCBDaGVja2JveCBpbiBEREwFATBnEAURMSBDaGVja2JveCBpbiBEREwFATFnEAURMiBDaGVja2JveCBpbiBEREwFATJnEAURMyBDaGVja2JveCBpbiBEREwFATNnEAURNCBDaGVja2JveCBpbiBEREwFATRnEAURNSBDaGVja2JveCBpbiBEREwFATVnEAURNiBDaGVja2JveCBpbiBEREwFATZnEAURNyBDaGVja2JveCBpbiBEREwFATdnEAUROCBDaGVja2JveCBpbiBEREwFAThnEAUROSBDaGVja2JveCBpbiBEREwFATlnZGQYAQUeX19Db250cm9sc1JlcXVpcmVQb3N0QmFja0tleV9fFgsFCWNoa0xpc3QkMAUJY2hrTGlzdCQxBQljaGtMaXN0JDIFCWNoa0xpc3QkMwUJY2hrTGlzdCQ0BQljaGtMaXN0JDUFCWNoa0xpc3QkNgUJY2hrTGlzdCQ3BQljaGtMaXN0JDgFCWNoa0xpc3QkOQUJY2hrTGlzdCQ5j5N5WLwITXwSHZHleLxkX3bGxdEAfBlAKQVPl7q5giw=" />
+        </div>
+
+        <div class="aspNetHidden">
+
+            <input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="6B2FD4CC" />
+            <input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdAAxCVoNpJlUPypEwdLk2y+Oe6XuyuCjg5WfttQmNxdvJZrYlgEBAEuE3jUp5wZD/Mofz1i+/pK4ajm0oh5vSEfJNb90DWsXY6JnoO2Om/jPIVb6myXwiWW1St4PkuiAVjctfZHeLqX5zWeugzih2II3hp/+/11LTpSu+Z5q0U4LvQtqdN8MoypZe9RkcHxMc+wV+AtxfJqf/kDMb4auMXks7EElRiRDD3RH2oLTe64o7LScTGbotYz6APvHIOZCGazdBd09R7XKoLwwCTbiYTY3fted92eScbZ/rQYiB20rmaA==" />
+        </div>
+        <div class="demo">
+            <div class="toggler">
+                <span>
+                    <input name="txtChkValue" type="text" id="txtChkValue" class="textbox" />
+                    <img id="ddlArrow" src="http://1.1.1.1/bmi/www.dotnetspeaks.com/LiveDemos/jQuery/images/down_arrow.jpg" style="margin-left: -23px; margin-bottom: -4px" />
+                </span>
+                <div id="effect" class="ui-widget-content">
+                    <table id="chkList" onclick="GetSelectedValue();">
+                        <tr>
+                            <td><input id="chkList_0" type="checkbox" name="chkList$0" value="0" /><label for="chkList_0">0 Checkbox in DDL</label></td>
+                        </tr>
+                        <tr>
+                            <td><input id="chkList_1" type="checkbox" name="chkList$1" value="1" /><label for="chkList_1">1 Checkbox in DDL</label></td>
+                        </tr>
+                        <tr>
+                            <td><input id="chkList_2" type="checkbox" name="chkList$2" value="2" /><label for="chkList_2">2 Checkbox in DDL</label></td>
+                        </tr>
+                        <tr>
+                            <td><input id="chkList_3" type="checkbox" name="chkList$3" value="3" /><label for="chkList_3">3 Checkbox in DDL</label></td>
+                        </tr>
+                        <tr>
+                            <td><input id="chkList_4" type="checkbox" name="chkList$4" value="4" /><label for="chkList_4">4 Checkbox in DDL</label></td>
+                        </tr>
+                        <tr>
+                            <td><input id="chkList_5" type="checkbox" name="chkList$5" value="5" /><label for="chkList_5">5 Checkbox in DDL</label></td>
+                        </tr>
+                        <tr>
+                            <td><input id="chkList_6" type="checkbox" name="chkList$6" value="6" /><label for="chkList_6">6 Checkbox in DDL</label></td>
+                        </tr>
+                        <tr>
+                            <td><input id="chkList_7" type="checkbox" name="chkList$7" value="7" /><label for="chkList_7">7 Checkbox in DDL</label></td>
+                        </tr>
+                        <tr>
+                            <td><input id="chkList_8" type="checkbox" name="chkList$8" value="8" /><label for="chkList_8">8 Checkbox in DDL</label></td>
+                        </tr>
+                        <tr>
+                            <td><input id="chkList_9" type="checkbox" name="chkList$9" value="9" /><label for="chkList_9">9 Checkbox in DDL</label></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+</html>
+
+<script language="javascript">
+    function GetSelectedValue() {
+        var chkBox = document.getElementById("chkList");
+        var checkbox = chkBox.getElementsByTagName("input");
+        var objTextBox = document.getElementById("txtChkValue");
+        var counter = 0;
+        objTextBox.value = "";
+        for (var i = 0; i < checkbox.length; i++) {
+            if (checkbox[i].checked) {
+                var chkBoxText = checkbox[i].parentNode.getElementsByTagName('label');
+                if (objTextBox.value == "") {
+                    objTextBox.value = chkBoxText[0].innerHTML;
+                }
+                else {
+                    objTextBox.value = objTextBox.value + ", " + chkBoxText[0].innerHTML;
+                }
+            }
+        }
+    }
+</script>
+
+<script type="text/javascript">
+    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+<script type="text/javascript">
+    try {
+        var pageTracker = _gat._getTracker("UA-16002194-1");
+        pageTracker._trackPageview();
+    } catch (err) { }</script>
+
